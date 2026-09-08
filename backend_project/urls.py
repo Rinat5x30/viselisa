@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from game.views import home_view, privacy_view, robots_view, sitemap_view, terms_view
+from game.views import home_view, players_view, privacy_view, robots_view, sitemap_view, terms_view
 
 urlpatterns = [
     path('', home_view, name='home'),
+    path('futbolcular/', players_view, name='players'),
     path('privacy/', privacy_view, name='privacy'),
     path('terms/', terms_view, name='terms'),
     path('robots.txt', robots_view, name='robots'),

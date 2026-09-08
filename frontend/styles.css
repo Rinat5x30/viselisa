@@ -424,6 +424,52 @@ input#letterInput:focus {
     color: #374151;
 }
 
+/* --- roster (players page) --- */
+
+.roster {
+    margin: 24px 0;
+}
+
+.roster h2 {
+    font-family: var(--pixel-font);
+    font-size: 14px;
+}
+
+.roster__count {
+    color: #6b7280;
+    font-weight: 400;
+}
+
+.roster__table-wrap {
+    overflow-x: auto;
+    border: var(--border-w) solid var(--ink);
+    box-shadow: var(--shadow-off) var(--shadow-off) 0 var(--ink);
+}
+
+.roster__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.roster__table th,
+.roster__table td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.roster__table th {
+    font-family: var(--pixel-font);
+    font-size: 10px;
+    background: var(--bg-light);
+}
+
+.roster__table tbody tr:last-child td {
+    border-bottom: none;
+}
+
 /* --- cookie banner --- */
 
 .cookie-banner {

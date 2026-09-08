@@ -103,6 +103,16 @@ class HangmanApiTests(APITestCase):
 
 @override_settings(SITE_DOMAIN='example.test')
 class SeoTests(TestCase):
+    def setUp(self):
+        self.player = Player.objects.create(
+            name='totti',
+            age=49,
+            position='Forward',
+            number=10,
+            first_club='AS Roma',
+            current_club='Retired',
+        )
+
     def test_robots_txt_disallows_api_and_admin(self):
         response = self.client.get('/robots.txt')
 
@@ -113,7 +123,7 @@ class SeoTests(TestCase):
         self.assertIn('Disallow: /admin/', content)
         self.assertIn('Sitemap: https://example.test/sitemap.xml', content)
 
-    def test_sitemap_xml_is_well_formed_and_has_three_urls(self):
+    def test_sitemap_xml_is_well_formed_and_has_four_urls(self):
         response = self.client.get('/sitemap.xml')
 
         self.assertEqual(response.status_code, 200)
@@ -121,7 +131,7 @@ class SeoTests(TestCase):
         root = ET.fromstring(response.content)
         urls = root.findall('sm:url', namespace)
 
-        self.assertEqual(len(urls), 3)
+        self.assertEqual(len(urls), 4)
         for url in urls:
             loc = url.find('sm:loc', namespace).text
             self.assertTrue(loc.startswith('https://example.test'))
@@ -141,6 +151,16 @@ class SeoTests(TestCase):
         content = response.content.decode()
         for item in seo.FAQ_ITEMS:
             self.assertIn(str(item['question']), content)
+
+    def test_players_page_lists_roster_grouped_by_position(self):
+        response = self.client.get('/futbolcular/')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.player.name)
+        self.assertContains(response, 'application/ld+json')
+        graph = self._extract_json_ld(response.content.decode())
+        self.assertEqual(graph['@type'], 'ItemList')
+        self.assertEqual(graph['numberOfItems'], 1)
 
     def test_privacy_and_terms_have_distinct_meta_descriptions(self):
         home = self._extract_meta_description(self.client.get('/').content.decode())

@@ -15,11 +15,33 @@ HINT_LABELS = {
     'current_club': 'Hazırkı klub',
 }
 
+# Order reflects on-pitch formation order (GK -> DEF -> MID -> FWD), used for the
+# roster page. Values match Player.position exactly as stored (see players.json).
+POSITION_LABELS = {
+    'Goalkeeper': 'Qapıçılar',
+    'Defender': 'Müdafiəçilər',
+    'Midfielder': 'Yarımmüdafiəçilər',
+    'Forward': 'Hücumçular',
+}
+
 SESSION_KEY = 'game_state'
 
 
 def pick_random_player() -> Player | None:
     return Player.objects.order_by('?').first()
+
+
+def get_players_grouped_by_position() -> list[dict]:
+    """Roster grouped for the public players page, in formation order."""
+    players_by_position = {}
+    for player in Player.objects.order_by('name'):
+        players_by_position.setdefault(player.position, []).append(player)
+
+    return [
+        {'label': label, 'players': players_by_position[position]}
+        for position, label in POSITION_LABELS.items()
+        if position in players_by_position
+    ]
 
 
 def build_game_state(player: Player) -> dict:

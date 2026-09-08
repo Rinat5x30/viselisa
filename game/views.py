@@ -26,6 +26,14 @@ def home_view(request):
     return render(request, 'index.html', context)
 
 
+def players_view(request):
+    context = {
+        'position_groups': services.get_players_grouped_by_position(),
+        'structured_data': json.dumps(seo.build_players_json_ld(request), ensure_ascii=False),
+    }
+    return render(request, 'players.html', context)
+
+
 def privacy_view(request):
     context = {
         'structured_data': json.dumps(

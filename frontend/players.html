@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Futbolçular" %} — toptop{% endblock %}
+{% block meta_description %}{% trans "toptop oyununda gizlədilən bütün futbolçuların siyahısı — qapıçılar, müdafiəçilər, yarımmüdafiəçilər və hücumçular, mövqeyə görə qruplaşdırılıb." %}{% endblock %}
+
+{% block og_title %}{% trans "Futbolçular" %} — toptop{% endblock %}
+{% block og_description %}{% trans "toptop oyununda gizlədilən bütün futbolçuların siyahısı, mövqeyə görə qruplaşdırılıb." %}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">{{ structured_data|safe }}</script>
+{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="{% trans 'Breadcrumb' %}">
+    <a href="{% url 'home' %}">{% trans "Ana səhifə" %}</a> / {% trans "Futbolçular" %}
+</nav>
+
+<section class="legal">
+    <h1>{% trans "Futbolçular" %}</h1>
+    <p>{% trans "toptop-da gizli söz kimi istifadə olunan bütün futbolçuların siyahısı — əfsanələr və müasir ulduzlar, mövqeyə görə qruplaşdırılıb. Kolleksiya vaxtaşırı genişlənir." %}</p>
+</section>
+
+{% for group in position_groups %}
+<section class="roster">
+    <h2>{{ group.label }} <span class="roster__count">({{ group.players|length }})</span></h2>
+    <div class="roster__table-wrap">
+        <table class="roster__table">
+            <thead>
+                <tr>
+                    <th scope="col">{% trans "Ad" %}</th>
+                    <th scope="col">{% trans "Yaş" %}</th>
+                    <th scope="col">{% trans "Nömrə" %}</th>
+                    <th scope="col">{% trans "İlk peşəkar klub" %}</th>
+                    <th scope="col">{% trans "Hazırkı klub" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in group.players %}
+                <tr>
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.age }}</td>
+                    <td>{{ player.number }}</td>
+                    <td>{{ player.first_club }}</td>
+                    <td>{{ player.current_club }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

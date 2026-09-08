@@ -11,8 +11,11 @@ from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from .models import Player
+
 STATIC_URLS = [
     ('home', 'daily', '1.0'),
+    ('players', 'weekly', '0.7'),
     ('privacy', 'yearly', '0.3'),
     ('terms', 'yearly', '0.3'),
 ]
@@ -83,6 +86,26 @@ def build_home_json_ld(request: HttpRequest) -> dict:
                 'isAccessibleForFree': True,
                 'inLanguage': 'az',
             },
+        ],
+    }
+
+
+def build_players_json_ld(request: HttpRequest) -> dict:
+    players_url = canonical_url(reverse('players'))
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        '@id': f'{players_url}#players',
+        'name': 'toptop futbolçular kolleksiyası',
+        'url': players_url,
+        'numberOfItems': Player.objects.count(),
+        'itemListElement': [
+            {
+                '@type': 'ListItem',
+                'position': index,
+                'item': {'@type': 'Person', 'name': player.name},
+            }
+            for index, player in enumerate(Player.objects.order_by('name'), start=1)
         ],
     }
 
