@@ -158,9 +158,11 @@ class SeoTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.player.name)
         self.assertContains(response, 'application/ld+json')
-        graph = self._extract_json_ld(response.content.decode())
-        self.assertEqual(graph['@type'], 'ItemList')
-        self.assertEqual(graph['numberOfItems'], 1)
+        json_ld = self._extract_json_ld(response.content.decode())
+        types = {item['@type'] for item in json_ld}
+        self.assertEqual(types, {'ItemList', 'BreadcrumbList'})
+        item_list = next(item for item in json_ld if item['@type'] == 'ItemList')
+        self.assertEqual(item_list['numberOfItems'], 1)
 
     def test_privacy_and_terms_have_distinct_meta_descriptions(self):
         home = self._extract_meta_description(self.client.get('/').content.decode())
@@ -173,8 +175,9 @@ class SeoTests(TestCase):
 
     @staticmethod
     def _extract_json_ld(html: str) -> dict:
-        marker = '<script type="application/ld+json">'
-        start = html.index(marker) + len(marker)
+        marker = 'application/ld+json'
+        tag_start = html.index(marker)
+        start = html.index('>', tag_start) + 1
         end = html.index('</script>', start)
         return json.loads(html[start:end])
 

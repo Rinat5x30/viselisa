@@ -26,9 +26,15 @@ class Command(BaseCommand):
             players = json.load(data_file)
 
         created_count = 0
+        updated_count = 0
         for payload in players:
-            _, created = Player.objects.get_or_create(name=payload['name'], defaults=payload)
+            fields = {key: value for key, value in payload.items() if key != 'name'}
+            _, created = Player.objects.update_or_create(name=payload['name'], defaults=fields)
             if created:
                 created_count += 1
+            else:
+                updated_count += 1
 
-        self.stdout.write(self.style.SUCCESS(f'Seed completed. Created: {created_count}.'))
+        self.stdout.write(
+            self.style.SUCCESS(f'Seed completed. Created: {created_count}. Updated: {updated_count}.')
+        )

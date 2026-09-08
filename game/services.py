@@ -47,6 +47,7 @@ def get_players_grouped_by_position() -> list[dict]:
 def build_game_state(player: Player) -> dict:
     return {
         'word': player.name.lower(),
+        'display_name': player.display_name or player.name.title(),
         'player': {
             'age': player.age,
             'position': player.position,
@@ -86,6 +87,7 @@ def build_game_response(state: dict, repeated: bool = False) -> dict:
         'status': state['status'],
         'repeated': repeated,
         'word': state['word'] if state['status'] != 'ongoing' else None,
+        'display_name': state['display_name'] if state['status'] != 'ongoing' else None,
     }
 
 

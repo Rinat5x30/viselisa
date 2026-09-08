@@ -47,10 +47,10 @@ function renderState(data) {
     }
 
     if (data.status === 'won') {
-        message.textContent = `Uğurlar! Oyunçu: ${data.word}`;
+        message.textContent = `Uğurlar! Oyunçu: ${data.display_name || data.word}`;
         lockControls(true);
     } else if (data.status === 'lost') {
-        message.textContent = `Məğlubiyyət! Oyunçu: ${data.word}`;
+        message.textContent = `Məğlubiyyət! Oyunçu: ${data.display_name || data.word}`;
         lockControls(true);
     } else if (data.repeated) {
         message.textContent = 'Bu hərf artıq yoxlanılıb.';

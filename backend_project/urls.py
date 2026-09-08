@@ -17,7 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from game.views import home_view, players_view, privacy_view, robots_view, sitemap_view, terms_view
+from game.views import (
+    google_site_verification_view,
+    home_view,
+    players_view,
+    privacy_view,
+    robots_view,
+    sitemap_view,
+    terms_view,
+)
 
 urlpatterns = [
     path('', home_view, name='home'),
@@ -26,6 +34,7 @@ urlpatterns = [
     path('terms/', terms_view, name='terms'),
     path('robots.txt', robots_view, name='robots'),
     path('sitemap.xml', sitemap_view, name='sitemap'),
+    path('google540ff7a17e28edb2.html', google_site_verification_view, name='google-site-verification'),
     path('admin/', admin.site.urls),
     path('api/', include('game.urls')),
 ]

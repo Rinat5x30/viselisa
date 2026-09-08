@@ -60,6 +60,15 @@ def sitemap_view(request):
     return HttpResponse(seo.sitemap_xml_content(), content_type='application/xml')
 
 
+def google_site_verification_view(request):
+    """Serves the Google Search Console HTML-file verification token at the
+    site root. The filename/content are issued by Google per property and
+    must be served byte-for-byte at that exact path — see seo.py docstring
+    convention for why this isn't derived from anything else.
+    """
+    return HttpResponse('google-site-verification: google540ff7a17e28edb2.html', content_type='text/html')
+
+
 class RandomPlayerView(APIView):
     def get(self, request):
         player = services.pick_random_player()

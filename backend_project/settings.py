@@ -6,6 +6,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from django.utils.csp import CSP
+
 # Some hosts' system mimetypes DB lacks these — WhiteNoise falls back to
 # application/octet-stream otherwise, which breaks the <link rel="preload" type="font/woff2">
 # match and can trigger browser console warnings for the self-hosted fonts.
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.csp.ContentSecurityPolicyMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -80,6 +83,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
+                'django.template.context_processors.csp',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'game.context_processors.site_settings',
@@ -132,6 +136,46 @@ STORAGES = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --- Content-Security-Policy ---------------------------------------------
+# Inline scripts (JSON-LD, the GA/AdSense id bootstrap in base.html) use
+# {{ csp_nonce }} instead of 'unsafe-inline'. The googlesyndication.com/
+# doubleclick.net/google-analytics.com entries are only exercised once
+# ADSENSE_CLIENT_ID / GA_MEASUREMENT_ID are set (see consent.js) — kept here
+# now so turning those on later doesn't silently break under CSP.
+SECURE_CSP = {
+    'default-src': [CSP.SELF],
+    'script-src': [
+        CSP.SELF,
+        CSP.NONCE,
+        'https://www.googletagmanager.com',
+        'https://pagead2.googlesyndication.com',
+        'https://googleads.g.doubleclick.net',
+    ],
+    'style-src': [CSP.SELF],
+    'font-src': [CSP.SELF],
+    'img-src': [
+        CSP.SELF,
+        'https://www.google-analytics.com',
+        'https://*.googlesyndication.com',
+        'https://*.doubleclick.net',
+    ],
+    'connect-src': [
+        CSP.SELF,
+        'https://www.google-analytics.com',
+        'https://analytics.google.com',
+        'https://www.googletagmanager.com',
+    ],
+    'frame-src': [
+        'https://googleads.g.doubleclick.net',
+        'https://tpc.googlesyndication.com',
+        'https://www.google.com',
+    ],
+    'object-src': [CSP.NONE],
+    'base-uri': [CSP.SELF],
+    'form-action': [CSP.SELF],
+    'frame-ancestors': [CSP.NONE],
+}
 
 # --- toptop: third-party integrations (all optional, off until configured) ---
 # Google AdSense publisher id, e.g. "ca-pub-1234567890123456"

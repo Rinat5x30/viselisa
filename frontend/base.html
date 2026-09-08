@@ -15,7 +15,7 @@
 
     <meta property="og:site_name" content="toptop">
     <meta property="og:locale" content="az_AZ">
-    <meta property="og:title" content="{% block og_title %}toptop{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}toptop — futbolçunu tap{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{% trans 'Futbolçunun adını hərflərlə tap — hər oyunda təsadüfi seçilən yeni futbolçu.' %}{% endblock %}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ CANONICAL_URL }}">
@@ -24,7 +24,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="toptop — futbolçunun adını hərflərlə tap">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}toptop{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}toptop — futbolçunu tap{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}{% trans 'Futbolçunun adını hərflərlə tap — hər oyunda təsadüfi seçilən yeni futbolçu.' %}{% endblock %}">
     <meta name="twitter:image" content="https://{{ SITE_DOMAIN }}{% static 'og-image.png' %}">
 
@@ -36,12 +36,12 @@
     <link rel="preload" href="{% static 'fonts/vt323-latin-ext.woff2' %}" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     {% if GA_MEASUREMENT_ID %}
-    <script>
+    <script nonce="{{ csp_nonce }}">
         window.TOPTOP_GA_ID = "{{ GA_MEASUREMENT_ID }}";
     </script>
     {% endif %}
     {% if ADSENSE_CLIENT_ID %}
-    <script>
+    <script nonce="{{ csp_nonce }}">
         window.TOPTOP_ADSENSE_ID = "{{ ADSENSE_CLIENT_ID }}";
     </script>
     {% endif %}

@@ -2,7 +2,7 @@
 {% load i18n static %}
 
 {% block structured_data %}
-<script type="application/ld+json">{{ structured_data|safe }}</script>
+<script type="application/ld+json" nonce="{{ csp_nonce }}">{{ structured_data|safe }}</script>
 {% endblock %}
 
 {% block content %}
@@ -64,6 +64,14 @@
     <p>{% trans "6 səhv hərfdən sonra oyun uduzulmuş sayılır. Hər səhvdən sonra bir yeni ipucu açılır — əvvəlcə yaş, sonra mövqe, forma nömrəsi, ilk peşəkar klub və nəhayət hazırkı klub." %}</p>
     <p>{% trans "Hesab yaratmağa ehtiyac yoxdur — \"Yeni oyun\" düyməsi ilə istədiyiniz qədər sınaya bilərsiniz." %}</p>
     <p><a href="{% url 'players' %}">{% trans "Bütün futbolçuların siyahısına baxın" %}</a></p>
+</section>
+
+<section class="about">
+    <h2>{% trans "Futbolçu kolleksiyası haqqında" %}</h2>
+    <p>{% trans "toptop-un kolleksiyasında dünya futbolunun həm əfsanələri, həm də bu günün ulduzları yer alır. İtaliya, Braziliya, Argentina, Fransa, Portuqaliya, İspaniya, Almaniya, Niderland, İngiltərə və digər futbol məktəblərini təmsil edən yüzlərlə futbolçu arasından hər oyunda təsadüfi seçim edilir." %}</p>
+    <p>{% trans "Hər oyun fərqlidir: bəzən 2000-ci illərin əfsanəsi, bəzən isə hazırda meydanlarda oynayan gənc ulduz gizli söz olur. Beləliklə toptop təkcə hərf tapmacası deyil, həm də müxtəlif nəsillərin futbolçularını xatırlamaq və ya tanımaq üçün bir yoldur." %}</p>
+    <p>{% trans "Təxminə adətən ən çox rast gəlinən hərflərdən — saitlərdən və tez-tez işlənən samitlərdən — başlamaq daha səmərəlidir. Hər səhvdən sonra açılan ipucu — yaş, mövqe, forma nömrəsi, ilk peşəkar klub və hazırkı klub — adı tapmaq üçün istiqaməti göstərir." %}</p>
+    <p>{% trans "Oyun tamamilə pulsuzdur, qeydiyyat tələb etmir və həm kompüterdə, həm də mobil telefonda rahat oynanılır. Nəticələr yalnız brauzerin yaddaşında saxlanılır — heç bir şəxsi məlumat toplanmır." %}</p>
 </section>
 
 <section class="faq">

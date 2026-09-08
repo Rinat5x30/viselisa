@@ -73,6 +73,9 @@ def build_home_json_ld(request: HttpRequest) -> dict:
                 '@type': 'WebSite',
                 '@id': f'{home_url}#website',
                 'name': 'toptop',
+                # Disambiguates the brand from the unrelated "TopTop" social/chat
+                # app that otherwise dominates search results for this name.
+                'alternateName': 'toptop — futbolçunu tap',
                 'url': home_url,
                 'inLanguage': 'az',
             },
@@ -90,9 +93,9 @@ def build_home_json_ld(request: HttpRequest) -> dict:
     }
 
 
-def build_players_json_ld(request: HttpRequest) -> dict:
+def build_players_json_ld(request: HttpRequest) -> list[dict]:
     players_url = canonical_url(reverse('players'))
-    return {
+    item_list = {
         '@context': 'https://schema.org',
         '@type': 'ItemList',
         '@id': f'{players_url}#players',
@@ -103,11 +106,13 @@ def build_players_json_ld(request: HttpRequest) -> dict:
             {
                 '@type': 'ListItem',
                 'position': index,
-                'item': {'@type': 'Person', 'name': player.name},
+                'item': {'@type': 'Person', 'name': player.display_name or player.name.title()},
             }
             for index, player in enumerate(Player.objects.order_by('name'), start=1)
         ],
     }
+    breadcrumb = build_breadcrumb_json_ld(request, str(_('Futbolçular')))
+    return [item_list, breadcrumb]
 
 
 def build_breadcrumb_json_ld(request: HttpRequest, page_name: str) -> dict:
