@@ -1,9 +1,16 @@
 """Django settings for the toptop project."""
 
+import mimetypes
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+
+# Some hosts' system mimetypes DB lacks these — WhiteNoise falls back to
+# application/octet-stream otherwise, which breaks the <link rel="preload" type="font/woff2">
+# match and can trigger browser console warnings for the self-hosted fonts.
+mimetypes.add_type('font/woff2', '.woff2')
+mimetypes.add_type('font/woff', '.woff')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
