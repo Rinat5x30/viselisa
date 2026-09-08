@@ -34,10 +34,12 @@ if not DEBUG:
     # SESSION_ENGINE is signed_cookies — the entire game state lives in this cookie
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    # Conservative starting value; raise once HTTPS is confirmed stable on the real domain.
-    # Do not add SECURE_HSTS_INCLUDE_SUBDOMAINS/PRELOAD while still on the shared
-    # *.onrender.com domain — only enable after moving to the real SITE_DOMAIN.
-    SECURE_HSTS_SECONDS = 3600
+    # playtoptop.onrender.com is a specific FQDN (not the shared onrender.com apex),
+    # so includeSubDomains only affects subdomains of this app, not other Render customers.
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # Not enabling preload: this is a temporary Render subdomain until the real
+    # custom domain is bought — preload entries are very slow/hard to remove later.
 
 INSTALLED_APPS = [
     'django.contrib.admin',
