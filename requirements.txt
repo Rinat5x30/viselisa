@@ -3,3 +3,4 @@ djangorestframework==3.16.1
 whitenoise==6.11.0
 python-dotenv==1.2.1
 gunicorn==25.0.0
+defusedxml==0.7.1

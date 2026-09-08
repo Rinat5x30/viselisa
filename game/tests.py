@@ -1,7 +1,12 @@
+import json
+
+import defusedxml.ElementTree as ET
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from . import seo
 from .models import Player
 
 
@@ -43,7 +48,7 @@ class HangmanApiTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['mistakes'], 1)
         self.assertEqual(len(response.data['hints']), 1)
-        self.assertEqual(response.data['hints'][0]['label'], 'Возраст')
+        self.assertEqual(response.data['hints'][0]['label'], 'Yaş')
 
     def test_repeated_guess_is_ignored(self):
         self.client.post(self.new_game_url)
@@ -59,7 +64,7 @@ class HangmanApiTests(APITestCase):
         response = self.client.post(self.guess_url, {'letter': 'я'}, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('латиницы', response.data['detail'])
+        self.assertIn('latın', response.data['detail'])
 
     def test_game_can_be_won(self):
         self.client.post(self.new_game_url)
@@ -94,3 +99,68 @@ class HangmanApiTests(APITestCase):
         self.assertEqual(response.data['status'], 'lost')
         self.assertEqual(response.data['mistakes'], 6)
         self.assertEqual(len(response.data['hints']), 5)
+
+
+@override_settings(SITE_DOMAIN='example.test')
+class SeoTests(TestCase):
+    def test_robots_txt_disallows_api_and_admin(self):
+        response = self.client.get('/robots.txt')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'text/plain')
+        content = response.content.decode()
+        self.assertIn('Disallow: /api/', content)
+        self.assertIn('Disallow: /admin/', content)
+        self.assertIn('Sitemap: https://example.test/sitemap.xml', content)
+
+    def test_sitemap_xml_is_well_formed_and_has_three_urls(self):
+        response = self.client.get('/sitemap.xml')
+
+        self.assertEqual(response.status_code, 200)
+        namespace = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+        root = ET.fromstring(response.content)
+        urls = root.findall('sm:url', namespace)
+
+        self.assertEqual(len(urls), 3)
+        for url in urls:
+            loc = url.find('sm:loc', namespace).text
+            self.assertTrue(loc.startswith('https://example.test'))
+
+    def test_home_page_has_canonical_and_json_ld(self):
+        response = self.client.get('/')
+
+        self.assertContains(response, 'rel="canonical"')
+        self.assertContains(response, 'application/ld+json')
+        graph = self._extract_json_ld(response.content.decode())['@graph']
+        types = {item['@type'] for item in graph}
+        self.assertEqual(types, {'WebSite', 'WebApplication'})
+
+    def test_home_page_renders_faq_content(self):
+        response = self.client.get('/')
+
+        content = response.content.decode()
+        for item in seo.FAQ_ITEMS:
+            self.assertIn(str(item['question']), content)
+
+    def test_privacy_and_terms_have_distinct_meta_descriptions(self):
+        home = self._extract_meta_description(self.client.get('/').content.decode())
+        privacy = self._extract_meta_description(self.client.get('/privacy/').content.decode())
+        terms = self._extract_meta_description(self.client.get('/terms/').content.decode())
+
+        self.assertNotEqual(home, privacy)
+        self.assertNotEqual(home, terms)
+        self.assertNotEqual(privacy, terms)
+
+    @staticmethod
+    def _extract_json_ld(html: str) -> dict:
+        marker = '<script type="application/ld+json">'
+        start = html.index(marker) + len(marker)
+        end = html.index('</script>', start)
+        return json.loads(html[start:end])
+
+    @staticmethod
+    def _extract_meta_description(html: str) -> str:
+        marker = '<meta name="description" content="'
+        start = html.index(marker) + len(marker)
+        end = html.index('"', start)
+        return html[start:end]

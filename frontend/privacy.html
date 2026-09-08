@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Məxfilik siyasəti" %} — toptop{% endblock %}
+{% block meta_description %}{% trans "toptop məxfilik siyasəti: qeydiyyat tələb olunmur, oyun proqresi yalnız sessiya cookie-sində saxlanılır, GA/AdSense yalnız razılıqdan sonra aktivləşir." %}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">{{ structured_data|safe }}</script>
+{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="{% trans 'Breadcrumb' %}">
+    <a href="{% url 'home' %}">{% trans "Ana səhifə" %}</a> / {% trans "Məxfilik siyasəti" %}
+</nav>
+
+<section class="legal">
+    <h1>{% trans "Məxfilik siyasəti" %}</h1>
+
+    <h2>{% trans "Hansı məlumatları toplayırıq" %}</h2>
+    <p>{% trans "toptop qeydiyyat və ya hesab tələb etmir. Oyun zamanı proqres yalnız brauzerinizin sessiya cookie-sində və cihazınızın yerli yaddaşında (localStorage) saxlanılır — bu məlumat bizim serverlərimizə ötürülmür və şəxsiyyətinizi müəyyən etmək üçün istifadə olunmur." %}</p>
+
+    <h2>{% trans "Cookie-lər" %}</h2>
+    <p>{% trans "Saytın işləməsi üçün zəruri olan cookie-lərdən əlavə, razılığınızla aşağıdakı xidmətlər istifadə oluna bilər:" %}</p>
+    <ul>
+        <li>{% trans "Google Analytics — sayta baş çəkmələr haqqında anonim statistika toplamaq üçün." %}</li>
+        <li>{% trans "Google AdSense — reklam göstərmək və reklamların effektivliyini ölçmək üçün." %}</li>
+    </ul>
+    <p>{% trans "Bu xidmətlər yalnız cookie bannerində 'Qəbul et' düyməsini basdıqdan sonra aktivləşir. İstənilən vaxt brauzerinizin ayarlarından cookie-ləri silə bilərsiniz." %}</p>
+
+    <h2>{% trans "Üçüncü tərəf xidmətləri" %}</h2>
+    <p>{% trans "Google Analytics və Google AdSense Google LLC tərəfindən idarə olunur. Bu xidmətlərin məlumatları necə işlətdiyi haqqında ətraflı məlumatı Google-un öz məxfilik siyasətindən əldə edə bilərsiniz." %}</p>
+
+    <h2>{% trans "Əlaqə" %}</h2>
+    <p>{% trans "Suallarınız üçün: +994708009070" %}</p>
+</section>
+{% endblock %}

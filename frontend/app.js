@@ -29,24 +29,32 @@ function lockControls(isLocked) {
 
 function renderState(data) {
     wordDisplay.textContent = data.masked_word;
-    usedLetters.textContent = `Ошибки: ${data.wrong_letters.join(', ') || '—'}`;
+    usedLetters.textContent = `Səhvlər: ${data.wrong_letters.join(', ') || '—'}`;
     setHangmanLevel(data.mistakes, data.max_mistakes);
 
     hintsList.innerHTML = '';
-    data.hints.forEach((hint) => {
-        const li = document.createElement('li');
-        li.textContent = `${hint.label}: ${hint.value}`;
-        hintsList.appendChild(li);
-    });
+    if (data.hints.length === 0) {
+        const empty = document.createElement('li');
+        empty.className = 'hints-empty';
+        empty.textContent = 'Səhv etdikcə burada ipucu görünəcək.';
+        hintsList.appendChild(empty);
+    } else {
+        data.hints.forEach((hint) => {
+            const li = document.createElement('li');
+            li.textContent = `${hint.label}: ${hint.value}`;
+            hintsList.appendChild(li);
+        });
+    }
 
     if (data.status === 'won') {
-        message.textContent = `Победа! Слово: ${data.word}`;
+        message.textContent = `Uğurlar! Oyunçu: ${data.word}`;
         lockControls(true);
     } else if (data.status === 'lost') {
-        message.textContent = `Поражение! Слово: ${data.word}`;
+        message.textContent = `Məğlubiyyət! Oyunçu: ${data.word}`;
         lockControls(true);
     } else if (data.repeated) {
-        message.textContent = 'Эта буква уже была.';
+        message.textContent = 'Bu hərf artıq yoxlanılıb.';
+        lockControls(false);
     } else {
         message.textContent = '';
         lockControls(false);
@@ -64,7 +72,7 @@ async function startNewGame() {
 
     const data = await response.json();
     if (!response.ok) {
-        message.textContent = data.detail || 'Ошибка запуска игры.';
+        message.textContent = data.detail || 'Oyunu başlatmaq mümkün olmadı.';
         return;
     }
 
@@ -75,7 +83,7 @@ async function startNewGame() {
 async function guessLetter() {
     const raw = letterInput.value.trim().toLowerCase();
     if (!/^[a-z]$/.test(raw)) {
-        message.textContent = 'Введите одну латинскую букву (a-z).';
+        message.textContent = 'Bir latın hərfi daxil edin (a-z).';
         return;
     }
 
@@ -90,7 +98,7 @@ async function guessLetter() {
     const data = await response.json();
 
     if (!response.ok) {
-        message.textContent = data.detail || 'Ошибка проверки буквы.';
+        message.textContent = data.detail || 'Hərfi yoxlamaq mümkün olmadı.';
         return;
     }
 
@@ -106,5 +114,4 @@ letterInput.addEventListener('keydown', (event) => {
     }
 });
 
-// Start first game automatically when page opens.
 startNewGame();

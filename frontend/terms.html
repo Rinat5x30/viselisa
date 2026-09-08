@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "İstifadə şərtləri" %} — toptop{% endblock %}
+{% block meta_description %}{% trans "toptop istifadə şərtləri: pulsuz, qeyri-rəsmi əyləncə oyunu, real şəkil və ya klub emblemi istifadə olunmur, məlumatlar 'olduğu kimi' təqdim edilir." %}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">{{ structured_data|safe }}</script>
+{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="{% trans 'Breadcrumb' %}">
+    <a href="{% url 'home' %}">{% trans "Ana səhifə" %}</a> / {% trans "İstifadə şərtləri" %}
+</nav>
+
+<section class="legal">
+    <h1>{% trans "İstifadə şərtləri" %}</h1>
+
+    <h2>{% trans "Xidmət haqqında" %}</h2>
+    <p>{% trans "toptop — futbolçuların adlarını hərflərlə tapmağa əsaslanan pulsuz əyləncə oyunudur. Oyunda göstərilən yaş, mövqe, nömrə və klub məlumatları ictimai mənbələrə əsaslanan ümumi məlumatdır və vaxtaşırı yenilənir." %}</p>
+
+    <h2>{% trans "Rəsmi əlaqə yoxdur" %}</h2>
+    <p>{% trans "toptop heç bir futbol klubu, federasiya və ya oyunçu ilə rəsmi əməkdaşlıqda deyil. Real şəkillər və klub emblemləri istifadə olunmur." %}</p>
+
+    <h2>{% trans "Məsuliyyətin məhdudlaşdırılması" %}</h2>
+    <p>{% trans "Sayt 'olduğu kimi' təqdim olunur. Məlumatlarda mümkün qeyri-dəqiqliklərə görə məsuliyyət daşımırıq." %}</p>
+
+    <h2>{% trans "Dəyişikliklər" %}</h2>
+    <p>{% trans "Bu şərtlər zaman-zaman yenilənə bilər. Saytdan istifadəni davam etdirməklə yenilənmiş şərtləri qəbul etmiş sayılırsınız." %}</p>
+</section>
+{% endblock %}

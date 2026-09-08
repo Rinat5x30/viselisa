@@ -1,0 +1,77 @@
+{% load i18n static %}<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}toptop — futbolçunu tap{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% trans 'toptop — futbolçunun adını hərflərlə tap. Yüzlərlə əfsanə və ulduz futbolçu arasından hər oyunda təsadüfi seçim edilir.' %}{% endblock %}">
+    <meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
+    <link rel="canonical" href="{{ CANONICAL_URL }}">
+
+    <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <meta name="theme-color" content="#1a1a2e">
+
+    <meta property="og:site_name" content="toptop">
+    <meta property="og:locale" content="az_AZ">
+    <meta property="og:title" content="{% block og_title %}toptop{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans 'Futbolçunun adını hərflərlə tap — hər oyunda təsadüfi seçilən yeni futbolçu.' %}{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ CANONICAL_URL }}">
+    <meta property="og:image" content="https://{{ SITE_DOMAIN }}{% static 'og-image.png' %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}toptop{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{% trans 'Futbolçunun adını hərflərlə tap — hər oyunda təsadüfi seçilən yeni futbolçu.' %}{% endblock %}">
+    <meta name="twitter:image" content="https://{{ SITE_DOMAIN }}{% static 'og-image.png' %}">
+
+    {% block structured_data %}{% endblock %}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    {% if GA_MEASUREMENT_ID %}
+    <script>
+        window.TOPTOP_GA_ID = "{{ GA_MEASUREMENT_ID }}";
+    </script>
+    {% endif %}
+    {% if ADSENSE_CLIENT_ID %}
+    <script>
+        window.TOPTOP_ADSENSE_ID = "{{ ADSENSE_CLIENT_ID }}";
+    </script>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+        <a href="{% url 'home' %}" class="logo">top<span class="logo-accent">top</span></a>
+    </header>
+
+    <div class="ad-slot ad-slot--top" id="ad-slot-top" hidden></div>
+
+    <main class="page">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="{% url 'privacy' %}">{% trans 'Məxfilik siyasəti' %}</a>
+            <a href="{% url 'terms' %}">{% trans 'İstifadə şərtləri' %}</a>
+        </nav>
+        <p class="footer-copy">© {% now "Y" %} toptop</p>
+    </footer>
+
+    <div class="cookie-banner" id="cookieBanner" hidden>
+        <p>{% trans 'Bu sayt təcrübənizi yaxşılaşdırmaq üçün cookie-lərdən istifadə edir.' %}</p>
+        <div class="cookie-banner__actions">
+            <button type="button" class="btn btn--ghost" id="cookieDecline">{% trans 'Rədd et' %}</button>
+            <button type="button" class="btn btn--accent" id="cookieAccept">{% trans 'Qəbul et' %}</button>
+        </div>
+    </div>
+
+    <script src="{% static 'consent.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
